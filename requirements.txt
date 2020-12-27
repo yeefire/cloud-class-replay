@@ -1,0 +1,4 @@
+pycrypto
+m3u8
+aiofiles
+requests_async
