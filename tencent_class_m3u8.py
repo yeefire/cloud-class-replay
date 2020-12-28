@@ -27,6 +27,7 @@ async def download_m3u8_video(index: int, suffix_url: str):
 
 
 async def download_m3u8_all():
+    print(f'[{class_video_name}]——已开始下载，请稍后……')
     if not os.path.exists(class_video_name + '/downloads'):
         os.makedirs(class_video_name + '/downloads')
     download_async_list = [asyncio.create_task(download_m3u8_video(i, video_suffix_url))
