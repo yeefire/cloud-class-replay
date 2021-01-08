@@ -14,7 +14,7 @@ def download_m3u8_video(index: int, suffix_url: str):
         i = 0
         while i < 3:
             try:
-                download_video_ts = requests.get(url=prefix_request_url + suffix_url, timeout=(3, 3))
+                download_video_ts = requests.get(url=prefix_request_url + suffix_url, timeout=60)
                 if download_video_ts.content:
                     with open(f'{class_video_name}/downloads/{index}.ts', "wb") as ts:
                         ts.write(download_video_ts.content)
@@ -43,10 +43,10 @@ def download_m3u8_all():
 def merge_m3u8_all():
     with open(f'{class_video_name}/{class_video_name}.mp4', 'ab') as final_file:
         print(f'[{class_video_name}]——开始拼接下载的分段视频')
-        temp_file_uri_list = os.listdir(f'{class_video_name}/downloads')
+        temp_file_uri_list = [uri for uri in os.listdir(f'{class_video_name}/downloads') if uri[0] != '.']
         temp_file_uri_list.sort(key=lambda x: int(x[:-3]))
         for uri in temp_file_uri_list:
-            if uri[0] == '.': continue  # 忽略隐藏文件
+            # if uri[0] == '.': continue  # 忽略隐藏文件
             with open(f'{class_video_name}/downloads/{uri}', 'rb') as temp_file:
                 final_file.write(temp_file.read())  # 将ts格式分段视频追加到完整视频文件中
         print(f'[{class_video_name}]——合成视频成功')

@@ -9,6 +9,9 @@ class_video_name = sys.argv[1]
 m3u8_file_uri = sys.argv[2]
 prefix_request_url = f'{m3u8_file_uri.rsplit("/", 1)[0]}/'
 
+headers={
+    'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_16_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36 DingTalk(5.1.38-macOS-macOS-MAS-14284537) nw Channel/201200'
+}
 
 async def download_m3u8_video(index: int, suffix_url: str):
     if not os.path.exists(f'{class_video_name}/downloads/{index}.ts'):
@@ -16,7 +19,7 @@ async def download_m3u8_video(index: int, suffix_url: str):
         while i < 10:
             try:
                 await asyncio.sleep(i)
-                download_video_ts = await requests.get(url=prefix_request_url + suffix_url, timeout=15)
+                download_video_ts = await requests.get(url=prefix_request_url + suffix_url,headers=headers, timeout=60)
                 assert download_video_ts
                 with open(f'{class_video_name}/downloads/{index}.ts', "wb") as ts:
                     ts.write(download_video_ts.content)
@@ -50,10 +53,10 @@ async def download_m3u8_all():
 def merge_m3u8_all():
     with open(f'{class_video_name}/{class_video_name}.mp4', 'ab') as final_file:
         print(f'[{class_video_name}]——开始拼接下载的分段视频')
-        temp_file_uri_list = os.listdir(f'{class_video_name}/downloads')
+        temp_file_uri_list = [uri for uri in os.listdir(f'{class_video_name}/downloads') if uri[0] != '.']
         temp_file_uri_list.sort(key=lambda x: int(x[:-3]))
         for uri in temp_file_uri_list:
-            if uri[0] == '.': continue  # 忽略隐藏文件
+            # if uri[0] == '.': continue  # 忽略隐藏文件
             with open(f'{class_video_name}/downloads/{uri}', 'rb') as temp_file:
                 final_file.write(temp_file.read())  # 将ts格式分段视频追加到完整视频文件中
         print(f'[{class_video_name}]——合成视频成功')

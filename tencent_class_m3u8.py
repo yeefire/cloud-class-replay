@@ -15,7 +15,7 @@ async def download_m3u8_video(index: int, suffix_url: str):
         i = 0
         while i < 3:
             try:
-                download_video_ts = await requests.get(url=prefix_request_url + suffix_url, timeout=30)
+                download_video_ts = await requests.get(url=prefix_request_url + suffix_url, timeout=60)
                 with open(f'{class_video_name}/downloads/{index}.ts', "wb") as ts:
                     ts.write(download_video_ts.content)
                 print(f'[{class_video_name}]——已下载第 {index} 个片段/ 共 {len(playlist.files)} 个片段')
@@ -76,10 +76,11 @@ def merge_m3u8_all():
         return
     with open(f'{class_video_name}/{class_video_name}.mp4', 'ab') as final_file:
         print(f'[{class_video_name}]——开始拼接解密后的分段视频')
-        temp_file_uri_list = os.listdir(f'{class_video_name}/decryption')
+        # temp_file_uri_list = os.listdir(f'{class_video_name}/decryption')
+        temp_file_uri_list = [uri for uri in os.listdir(f'{class_video_name}/decryption') if uri[0] != '.']
         temp_file_uri_list.sort(key=lambda x: int(x[:-6]))
         for uri in temp_file_uri_list:
-            if uri[0] == '.': continue  # 忽略隐藏文件
+            # if uri[0] == '.': continue  # 忽略隐藏文件
             with open(f'{class_video_name}/decryption/{uri}', 'rb') as temp_file:
                 final_file.write(temp_file.read())  # 将ts格式分段视频追加到完整视频文件中
         print(f'[{class_video_name}]——合成视频成功')

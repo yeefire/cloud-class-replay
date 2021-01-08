@@ -10,3 +10,5 @@
 * 命令行执行 `python3 tencent_class_m3u8.py 这节课的名称 这节课的M3U文件请求地址(网址或者本地路径都可以)`
 
 例如: `python3 tencent_class_m3u8.py 【Python进阶】Python-上午 https://1dada217.vod2.myqcloud.com/fdadadada3kmdkfsxxxxxxxxxxxxxxxxx`
+
+获取详细使用及脚本思路可以访问博客寻找更多信息或与我联系。[Yee's Blog](https://blog.yeefire.com/2020_12/cloud_class_replay.html)
