@@ -1,4 +1,5 @@
 pycrypto
-m3u8
-aiofiles
+m3u8~=0.8.0
+aiofiles~=0.6.0
 requests_async
+requests[security]

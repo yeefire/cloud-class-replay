@@ -6,8 +6,9 @@ import os, sys
 
 class_video_name = sys.argv[1]
 m3u8_file_uri = sys.argv[2]
-prefix_request_url = f'{m3u8_file_uri.rsplit("/", 1)[0]}/'
 
+prefix_request_url = f'{m3u8_file_uri.rsplit("/", 1)[0]}/'
+headers={'user-agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_16_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36 DingTalk(5.1.40-macOS-macOS-MAS-14354546) nw Channel/201200'}
 
 def download_m3u8_video(index: int, suffix_url: str):
     if not os.path.exists(f'{class_video_name}/downloads/{index}.ts'):
