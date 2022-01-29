@@ -1,4 +1,6 @@
-pycrypto
+#pycrypto
+wheel
+pycryptodome
 m3u8~=0.8.0
 aiofiles~=0.6.0
 requests_async
