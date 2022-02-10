@@ -52,9 +52,25 @@ def merge_m3u8_all():
                 final_file.write(temp_file.read())  # 将ts格式分段视频追加到完整视频文件中
         print(f'[{class_video_name}]——合成视频成功')
 
+def merge_m3u8_ffmpeg():
+    with open(f'{class_video_name}/list.txt', 'w+') as list_file:
+        print(f'[{class_video_name}]——开始生成合并列表清单',end="...")
+        temp_file_uri_list = [uri for uri in os.listdir(f'{class_video_name}/downloads') if uri[0] != '.']
+        temp_file_uri_list.sort(key=lambda x: int(x[:-3]))
+        for uri in temp_file_uri_list:
+            list_file.writelines(f"file downloads/{uri}\n")
+        print('已生成')
+        print('使用ffmpeg合成视频文件')
+        os.chdir(f'{class_video_name}')
+        os.popen('ffmpeg -y -loglevel info -f concat -i list.txt -acodec copy -vcodec copy output.mp4')
+        print(f'[{class_video_name}]——视频文件:{os.getcwd()}/output.mp4')
+
+
+
 
 if __name__ == '__main__':
     playlist = m3u8.load(m3u8_file_uri, verify_ssl=False)
     download_m3u8_all()
     merge_m3u8_all()
-    print(f'[{class_video_name}]——视频文件:{os.getcwd()}/{class_video_name}/{class_video_name}.mp4')
+    # merge_m3u8_ffmpeg()
+

@@ -6,6 +6,9 @@
 
 # 更新记录
 
+## 2022.2.10
+- [Debug] DingTalk 使用ffmpeg对视频进行合并。
+
 ## 2022.1.29
 
 - 使用`pycryptodome`库代替无人维护的`pycrypto`库。感谢@Sakura-Rain提供的信息。
