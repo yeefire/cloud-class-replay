@@ -33,7 +33,6 @@ async def download_m3u8_all():
     download_async_list = [asyncio.create_task(download_m3u8_video(i, video_suffix_url))
                            for i, video_suffix_url in enumerate(playlist.files, 1)]
     await asyncio.wait(download_async_list)
-
     download_encrypt_list = [uri for uri in os.listdir(f'{class_video_name}/downloads') if uri[0] != '.']
     if len(download_encrypt_list) == len(playlist.files):  # 判断是否有漏下的分段视频没有下载
         print(f'[{class_video_name}]——视频全部下载完成')
@@ -86,10 +85,30 @@ def merge_m3u8_all():
         print(f'[{class_video_name}]——合成视频成功')
 
 
+def merge_m3u8_all_2():
+    download_encrypt_list = [uri for uri in os.listdir(f'{class_video_name}/downloads') if uri[0] != '.']
+    with open(f'{class_video_name}/{class_video_name}.mp4', 'ab') as final_file:
+        print(f'[{class_video_name}]——开始拼接解密后的分段视频')
+        # temp_file_uri_list = os.listdir(f'{class_video_name}/decryption')
+        temp_file_uri_list = [uri for uri in os.listdir(f'{class_video_name}/downloads') if uri[0] != '.']
+        temp_file_uri_list.sort(key=lambda x: int(x[:-3]))
+        for uri in temp_file_uri_list:
+            # if uri[0] == '.': continue  # 忽略隐藏文件
+            with open(f'{class_video_name}/downloads/{uri}', 'rb') as temp_file:
+                final_file.write(temp_file.read())  # 将ts格式分段视频追加到完整视频文件中
+        print(f'[{class_video_name}]——合成视频成功')
+
+
 if __name__ == '__main__':
     playlist = m3u8.load(m3u8_file_uri, verify_ssl=False)
-    del playlist.files[0]  # 第一个文件为视频密钥，忽略这个文件。
-    asyncio.run(download_m3u8_all())
-    asyncio.run(decrypt_m3u8_all())
-    merge_m3u8_all()
+    if playlist.keys[0]!=None:
+        print("视频m3u8文件已加密，将会对视频进行下载、解密、合成操作")
+        del playlist.files[0]  # 第一个文件为视频密钥，忽略这个文件。
+        asyncio.run(download_m3u8_all())
+        asyncio.run(decrypt_m3u8_all())
+        merge_m3u8_all()
+    else:
+        print("视频m3u8文件未加密，将会对视频进行下载、合成操作")
+        asyncio.run(download_m3u8_all())
+        merge_m3u8_all_2()
     print(f'[{class_video_name}]——视频文件:{os.getcwd()}/{class_video_name}/{class_video_name}.mp4')
